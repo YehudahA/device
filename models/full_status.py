@@ -1,5 +1,5 @@
 from enum import Enum
 
-class FillStatus(Enum):
+class FullStatus(Enum):
      FULL = 1
      EMPTY = 2

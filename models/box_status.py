@@ -1,11 +1,11 @@
 
 
 from models.door_status import DoorStatus
-from models.fill_status import FillStatus
+from models.full_status import FullStatus
 
 
 class BoxStatus():
-    def __init__(self, full: FillStatus, door: DoorStatus):
+    def __init__(self, full: FullStatus, door: DoorStatus):
         self.full = full
         self.door = door
 
