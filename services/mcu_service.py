@@ -1,6 +1,6 @@
 from models.box_status import BoxStatus
 from models.door_status import DoorStatus
-from models.full_status import FullStatus
+from models.content_status import ContentStatus
 from services.device_agent import DeviceAgent
 from enum import Enum
 
@@ -36,7 +36,7 @@ class MCUService:
 
     def int_to_box_status(i: int):
         bools = MCUService.int_to_bools(i)
-        return BoxStatus(FullStatus.FULL if bools[0] else FullStatus.EMPTY, DoorStatus.OPEN if bools[1] else DoorStatus.CLOSED)
+        return BoxStatus(ContentStatus.FULL if bools[0] else ContentStatus.EMPTY, DoorStatus.OPEN if bools[1] else DoorStatus.CLOSED)
 
     def int_to_bools(i: int):
         formatted = "{:02b}".format(i)

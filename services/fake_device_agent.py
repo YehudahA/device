@@ -1,6 +1,6 @@
 from models.box_status import BoxStatus
 from models.door_status import DoorStatus
-from models.full_status import FullStatus
+from models.content_status import ContentStatus
 
 from threading import Timer
 
@@ -8,24 +8,24 @@ from threading import Timer
 class Box:
     def __init__(self,
                  id: int,
-                 full: FullStatus,
+                 content: ContentStatus,
                  door: DoorStatus
                  ) -> None:
         self.id = id
-        self.full = full
+        self.content = content
         self.door = door
 
 
 class FakeDataService:
     boxes = [
-        Box(1, FullStatus.FULL, DoorStatus.CLOSED),
-        Box(2, FullStatus.FULL, DoorStatus.OPEN),
-        Box(3, FullStatus.FULL, DoorStatus.CLOSED),
-        Box(4, FullStatus.FULL, DoorStatus.OPEN),
-        Box(5, FullStatus.EMPTY, DoorStatus.CLOSED),
-        Box(6, FullStatus.EMPTY, DoorStatus.OPEN),
-        Box(7, FullStatus.EMPTY, DoorStatus.CLOSED),
-        Box(8, FullStatus.EMPTY, DoorStatus.OPEN)
+        Box(1, ContentStatus.FULL, DoorStatus.CLOSED),
+        Box(2, ContentStatus.FULL, DoorStatus.OPEN),
+        Box(3, ContentStatus.FULL, DoorStatus.CLOSED),
+        Box(4, ContentStatus.FULL, DoorStatus.OPEN),
+        Box(5, ContentStatus.EMPTY, DoorStatus.CLOSED),
+        Box(6, ContentStatus.EMPTY, DoorStatus.OPEN),
+        Box(7, ContentStatus.EMPTY, DoorStatus.CLOSED),
+        Box(8, ContentStatus.EMPTY, DoorStatus.OPEN)
     ]
 
     def find(self, id: int):
@@ -33,7 +33,7 @@ class FakeDataService:
 
     def getStatus(self, id: int):
         box = self.find(id)
-        return BoxStatus(box.full, box.door)
+        return BoxStatus(box.content, box.door)
 
     def open(self, id: int):
         box = self.find(id)
@@ -75,6 +75,6 @@ class FakeDeviceAgent:
         return arr
 
     def box_status(box: Box) -> int:
-        letter = 0 if box.full == FullStatus.EMPTY else 16
+        letter = 0 if box.content == ContentStatus.EMPTY else 16
         door = 0 if box.door == DoorStatus.CLOSED else 1
         return door + letter

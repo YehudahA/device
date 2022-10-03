@@ -29,7 +29,7 @@ def create_app() -> Flask:
     app = Flask(__name__)
     app.add_url_rule("/status/all", "all", get_all_statuses, methods=['GET'])
     app.add_url_rule("/status/<int:id>", "status", get_box_status, methods=['GET'])
-    app.add_url_rule("/open/<int:id>", "open", open_box, methods=['GET'])
+    app.add_url_rule("/open/<int:id>", "open", open_box, methods=['GET','POST'])
 
     return app
 

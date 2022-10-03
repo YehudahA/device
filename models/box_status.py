@@ -1,16 +1,16 @@
 
 
 from models.door_status import DoorStatus
-from models.full_status import FullStatus
+from models.content_status import ContentStatus
 
 
 class BoxStatus():
-    def __init__(self, full: FullStatus, door: DoorStatus):
-        self.full = full
+    def __init__(self, content: ContentStatus, door: DoorStatus):
+        self.content = content
         self.door = door
 
     def serialize(self):
         return {
-            "full": self.full.name,
+            "content": self.content.name,
             "door": self.door.name
         }
