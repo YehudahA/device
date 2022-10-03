@@ -59,7 +59,7 @@ class FakeDeviceAgent:
             line1 = bytearray([188, 203, 0, 0, 0, 1, 92])
             statuses = list(
                 map(lambda b: FakeDeviceAgent.box_status(b), self.db.boxes))
-            line2 = bytearray(statuses)
+            line2 = bytearray([1, 1]) + bytearray(statuses)
             self.buffer = line1 + line2
 
         else:
@@ -69,7 +69,7 @@ class FakeDeviceAgent:
                 [188, 203, 0, 0, 0, 1, 3, 160, boxId, status])
 
     def read(self, length: int) -> bytearray:
-        len2 = length if length == 7 or length == 7 else len(self.buffer)
+        len2 = length if length == 7 else len(self.buffer)
         arr = self.buffer[0:len2]
         self.buffer = self.buffer[len2:]
         return arr
