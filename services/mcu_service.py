@@ -23,7 +23,7 @@ class MCUService:
 
         result0 = self.__service.read(7)
         length = result0[6]
-        result1 = self.__service.read(length if length != 92 else box_count + 2)
+        result1 = self.__service.read(length if length != 92 else MCUService.box_count + 2)
         status_bytes = result1[2:]
         return list(map(lambda i: MCUService.int_to_box_status(i), status_bytes))
 
