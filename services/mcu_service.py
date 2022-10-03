@@ -23,9 +23,8 @@ class MCUService:
 
         result0 = self.__service.read(7)
         length = result0[6]
-        status_bytes = self.__service.read(
-            length)[2:3] if length != 92 else self.__service.read(length)
-
+        result1 = self.__service.read(length if length != 92 else box_count + 2)
+        status_bytes = result1[2:]
         return list(map(lambda i: MCUService.int_to_box_status(i), status_bytes))
 
     def open_door(self, box: int):
@@ -40,5 +39,5 @@ class MCUService:
         return BoxStatus(FullStatus.FULL if bools[0] else FullStatus.EMPTY, DoorStatus.OPEN if bools[1] else DoorStatus.CLOSED)
 
     def int_to_bools(i: int):
-        formatted = "{:02x}".format(i)
+        formatted = "{:02b}".format(i)
         return list(map(lambda b: b == '1', formatted))

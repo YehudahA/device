@@ -1,6 +1,10 @@
 from flask import Flask, jsonify
 from container import Container
 from dependency_injector.wiring import Provide, inject
+import logging
+import logging.handlers as handlers
+import os
+from sys import platform
 
 from services.mcu_service import MCUService
 
@@ -29,6 +33,27 @@ def create_app() -> Flask:
 
     return app
 
+
+def configLogging():
+    logLevelArg = logging.DEBUG
+
+    consoleLogLevel, fileLogLevel = logLevelArg, logLevelArg
+
+    if not logLevelArg:
+        consoleLogLevel, fileLogLevel = logging.INFO, logging.WARNING
+        
+    logging.basicConfig(level=consoleLogLevel, format='%(levelname)s|%(name)s|%(message)s')
+
+    logs_dir = "C:/Logs/pyAgent" if platform == "win32" else "/home/ipis/logs"
+     
+    if not os.path.isdir(logs_dir):
+        os.mkdir(logs_dir, mode=0o777)
+        os.chmod(logs_dir, 0o777)
+        
+    fileHandler = handlers.TimedRotatingFileHandler(logs_dir + '/pyagent_app.log', when='MIDNIGHT', backupCount=7)
+    fileHandler.setLevel(fileLogLevel)
+    fileHandler.setFormatter(logging.Formatter('%(asctime)s|%(levelname)s|%(filename)s:%(lineno)d|%(message)s'))
+    logging.root.addHandler(fileHandler)
 
 if __name__ == "__main__":
     container = Container()
