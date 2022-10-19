@@ -1,4 +1,5 @@
 from flask import Flask, jsonify
+from flask_cors import CORS
 from container import Container
 from dependency_injector.wiring import Provide, inject
 import logging
@@ -31,6 +32,8 @@ def create_app() -> Flask:
     app.add_url_rule("/status/<int:id>", "status", get_box_status, methods=['GET'])
     app.add_url_rule("/open/<int:id>", "open", open_box, methods=['GET','POST'])
 
+    cors = CORS(app)
+    
     return app
 
 
