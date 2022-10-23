@@ -1,3 +1,4 @@
 Flask==2.1.2
 flask-cors
+websocket-client
 dependency-injector

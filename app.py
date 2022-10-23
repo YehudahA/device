@@ -1,33 +1,32 @@
+import rel
 from flask import Flask, jsonify
 from flask_cors import CORS
+from multiprocessing import Process
 from container import Container
-from dependency_injector.wiring import Provide, inject
 import logging
 import logging.handlers as handlers
 import os
 from sys import platform
-from hub import init_socket
+from hub import init_ws
 
 from services.mcu_service import MCUService
 
+container = Container()
+mcu = container.mcu_service
 
-@inject
-def get_box_status(id: int, service: MCUService = Provide[Container.mcu_service]):
-    box = service.get_box_status(id)
+def get_box_status(id: int):
+    box = mcu.get_box_status(id)
     return box[0].serialize()
 
 
-@inject
-def get_all_statuses(service: MCUService = Provide[Container.mcu_service]):
-    boxes = service.get_box_status(255)
+def get_all_statuses():
+    boxes = mcu.get_box_status(255)
     return jsonify(list(map(lambda b: b.serialize(), boxes)))
 
 
-@inject
-def open_box(id: int, service: MCUService = Provide[Container.mcu_service]):
-    service.open_door(id)
+def open_box(id: int):
+    mcu.open_door(id)
     return ('', 204)
-
 
 def create_app() -> Flask:
     app = Flask(__name__)
@@ -66,12 +65,28 @@ def configLogging():
         '%(asctime)s|%(levelname)s|%(filename)s:%(lineno)d|%(message)s'))
     logging.root.addHandler(fileHandler)
 
+def run_app():
+    app = create_app()
+    app.run()
 
-if __name__ == "__main__":
-    ws = init_socket()
+def open_box_from_server(ws, msg: str):
+    import re
+    m = re.search('OPEN (\d+)', msg)
+
+    if m:
+        box = int(m.group(1))
+        mcu.open_door(box)
+
+
+if __name__ == "__main__":        
+    appsthread = Process(target=run_app)
+    appsthread.start()
+    print('app initialized')
+    
+    ws = init_ws(open_box_from_server)
     print('socket initialized')
-    ws.send('Hello!')
 
-    container = Container()
-    container.wire(modules=[__name__])
-    create_app().run()
+    rel.signal(2, rel.abort)  # Keyboard Interrupt
+    rel.dispatch()
+
+    appsthread.terminate()

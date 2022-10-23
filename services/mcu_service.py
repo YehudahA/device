@@ -1,9 +1,11 @@
+import logging
 from models.box_status import BoxStatus
 from models.door_status import DoorStatus
 from models.content_status import ContentStatus
 from services.device_agent import DeviceAgent
 from enum import Enum
 
+_logger = logging.getLogger(__name__)
 
 class Command(Enum):
     OPEN = 1
@@ -28,6 +30,7 @@ class MCUService:
         return list(map(lambda i: MCUService.int_to_box_status(i), status_bytes))
 
     def open_door(self, box: int):
+        _logger.info("Request top open box {0}", box)
         cmd = MCUService.build_command(Command.OPEN, box)
         self.__service.write(cmd)
 
