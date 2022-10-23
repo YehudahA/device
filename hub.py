@@ -16,7 +16,7 @@ def on_open(ws):
 
 def init_socket():
     websocket.enableTrace(True)
-    ws = websocket.WebSocketApp("wss://localhost:5001/ws",
+    ws = websocket.WebSocketApp("wss://ws.postman-echo.com/raw",
                               on_open=on_open,
                               on_message=on_message,
                               on_error=on_error,
@@ -25,6 +25,7 @@ def init_socket():
     ws.run_forever(dispatcher=rel)  
     rel.signal(2, rel.abort)  # Keyboard Interrupt  
     rel.dispatch()
+    return ws
     
 if __name__ == "__main__":
     init_socket()    
