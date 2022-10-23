@@ -6,6 +6,7 @@ import logging
 import logging.handlers as handlers
 import os
 from sys import platform
+from hub import init_socket
 
 from services.mcu_service import MCUService
 
@@ -58,7 +59,9 @@ def configLogging():
     fileHandler.setFormatter(logging.Formatter('%(asctime)s|%(levelname)s|%(filename)s:%(lineno)d|%(message)s'))
     logging.root.addHandler(fileHandler)
 
+
 if __name__ == "__main__":
+    #init_socket()
     container = Container()
     container.wire(modules=[__name__])
     create_app().run()
