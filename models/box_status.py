@@ -14,3 +14,8 @@ class BoxStatus():
             "content": self.content.name,
             "door": self.door.name
         }
+
+
+class BoxStatusHelper():
+    def serializeList(boxes: list[BoxStatus]):
+        return list(map(lambda b: b.serialize(), boxes))

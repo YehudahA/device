@@ -7,6 +7,7 @@ from enum import Enum
 
 _logger = logging.getLogger(__name__)
 
+
 class Command(Enum):
     OPEN = 1
     GET_STATUS = 2
@@ -19,13 +20,17 @@ class MCUService:
     def __init__(self, device: DeviceAgent):
         self.__service = device
 
+    def get_all_box_status(self):
+        return self.get_box_status(255)
+
     def get_box_status(self, box: int):
         cmd = MCUService.build_command(Command.GET_STATUS, box)
         self.__service.write(cmd)
 
         result0 = self.__service.read(7)
         length = result0[6]
-        result1 = self.__service.read(length if length != 92 else MCUService.box_count + 2)
+        result1 = self.__service.read(
+            length if length != 92 else MCUService.box_count + 2)
         status_bytes = result1[2:]
         return list(map(lambda i: MCUService.int_to_box_status(i), status_bytes))
 
